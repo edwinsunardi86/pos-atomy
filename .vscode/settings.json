@@ -1,7 +1,23 @@
 {
-    "[blade]": {
-      "editor.formatOnSave": false,
-      "eslint.enable": false,
-      "prettier.enable": false
-    }
-  }
+  "[blade]": {
+    "editor.formatOnSave": false,
+    "eslint.enable": false,
+    "prettier.enable": false
+  },
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "github.copilot.enable": {
+    "*": true,
+    "blade": true,
+    "php": true,
+    "javascript": true
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.inlineSuggest.enable": true
+}

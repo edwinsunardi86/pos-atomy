@@ -7,8 +7,10 @@ use App\Http\Controllers\ContactClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileUserController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\UploadController;
 
 /*
@@ -49,6 +51,14 @@ Route::get('/linkstorage', function () {
     Artisan::call('storage:link');
 });
 
+// Simple public ping route to verify the framework is responding (no middleware)
+Route::get('/ping', function () {
+    return response('ok', 200)->header('Content-Type', 'text/plain');
+});
+
+// Temporary debug route (no middleware) to call the controller method directly
+Route::get('/debug/products/dataTableProduct', [ProductController::class, 'dataTableProduct']);
+
 Route::group(['middleware' => ['auth','authorization'],'prefix'=>'users'], function() {
     Route::get('/', [UserController::class,'index']);
     Route::get('/create_user', [UserController::class,'create_user']);
@@ -60,70 +70,26 @@ Route::group(['middleware' => ['auth','authorization'],'prefix'=>'users'], funct
     Route::post('/set_user_access_previlage',[UserController::class,'setUserAccessPrevilage']);
     Route::post('/setUserAccessAuthority',[UserController::class,'setUserAccessAuthority']);
     Route::post('/setDataAccess',[UserController::class,'setDataAccess']);
-    Route::get('/data_company',[AgingARController::class,'getDataCompany']);
-    Route::post('/branch_admin',[AgingARController::class,'get_branch_admin']);
-    Route::get('/get_user_company_branches/{id}',[UserController::class,'getUserCompanyBranches']);
 });
 
 
 Route::get('/change_password',[ProfileUserController::class,'viewChangePassword'])->middleware('auth');
 Route::post('/change_password',[ProfileUserController::class,'changeSelfPassword'])->middleware('auth');
-Route::get('/cron_retrieve_invoice',[AgingARController::class,'cron_retrieve_invoice']);
 
-Route::group(['middleware' => ['auth', 'authorization'], 'prefix'=>'aging_ar'],function(){
-    Route::get('/company',[AgingARController::class,'getDataCompany']);
-    Route::get('/',[AgingARController::class,'index']);
-    Route::post('/branch',[AgingARController::class,'get_branch']);
-    Route::post('/branch_admin',[AgingARController::class,'get_branch_admin']);
-    Route::post('/dt_aging_ar',[AgingARController::class,'datatable_aging_ar']);
-    Route::post('/add',[AgingARProgressController::class,'create_AgingArProgressController']);
-    Route::post('/export_aging_ar',[AgingARController::class,'export_aging_ar']);
-    Route::get('/detail_aging_ar/{id}',[AgingARController::class,'detail_aging_ar']);
-    Route::post('/getContactClient',[AgingARController::class,'getContactClient']);
+Route::group(['middleware' => ['auth','authorization']], function() {
+    
+    // Correct route name -> controller method mismatch: use existing `dataTableProduct`
+    
 });
 
-Route::group(['middleware' => ['auth', 'authorization'], 'prefix'=>'category'],function(){
-    Route::get('/',[CategoryController::class,'index']);
-});
-
-Route::get('/dt_category',[CategoryController::class,'datatable_category']);
-
-
-Route::group(['middleware'=>['auth','authorization'],'prefix'=>'category'], function(){
-    Route::post('/add',[CategoryController::class, 'addCategory']);
-    Route::post('/update/{id}',[CategoryController::class, 'editCategory']);
-    Route::post('/delete',[CategoryController::class, 'deleteCategory']);
-});
-
-Route::get('category/getCategory',[CategoryController::class, 'getCategory']);
-
-Route::group(['middleware'=>['auth','authorization'],'prefix'=>'upload'], function(){
-    Route::get('/',[UploadController::class, 'view_upload']);
-    Route::post('/upload_contact_client',[UploadController::class,'UploadContactClient'])->name('upload.contact_client');
-    Route::post('/store_data_by_upload_contract',[UploadController::class,'storeDataByUploadContactClient'])->name('store.data_upload');
-});
-
-Route::group(['middleware'=>['auth','authorization'],'prefix'=>'data_contact'], function(){
-    Route::get('/dataTableContactClient',[ContactClientController::class,'dataTableContactClient'])->name('datatable.data_contact_client');
-    Route::get('/contact_client',[ContactClientController::class,'viewDataContactClient']);
-    Route::get('/addContactClient',[ContactClientController::class,'viewAddContactClient']);
-    Route::post('/dataClientByClientName',[ContactClientController::class,'dataClientByClientName']);
-    Route::post('/dataProjectByProjectCode',[ContactClientController::class,'dataProjectByProjectCode']);
-    Route::post('/addDataPICClient',[ContactClientController::class,'addDataPICClient']);
-    Route::get('/editContactClient/{id}',[ContactClientController::class,'editContactClient']);
-    Route::post('/editDataPICClient',[ContactClientController::class,'editDataPICClient']);
-});
-
-Route::group(['middleware'=>['auth','authorization'],'prefix'=>'log'], function(){
-    Route::get('/log_progress_aging_ar',[AgingARProgressController::class,'logAgingProgressAR']);
-    Route::post('/dt_log_progress_aging_ar',[AgingARProgressController::class,'dataTableLogAgingProgressAR']);
-    Route::post('/view_log_per_invoice_number',[AgingARProgressController::class,'viewLogPerInvoiceNumber']);
-    Route::get('/refresh_status_aging_ar',[AgingARProgressController::class,'refreshStatusAgingAR']);
-    Route::post('/filter_client',[AgingARProgressController::class,'filterClient']);
-    Route::post('/export_log_per_invoice_number',[AgingARProgressController::class,'exportLogPerInvoiceNumber']);
-    Route::post('/last_follow_up_invoice_number',[AgingARProgressController::class,'getLastFollowUpInvoiceNumber']);
-    Route::get('/fetch_follow_up_date',[AgingARProgressController::class,'fetchNotificationFollowUp']);
+Route::group(['middleware' => ['auth','authorization']], function() {
+    Route::post('/products/dataTableProduct', [ProductController::class, 'dataTableProduct'])->name('products.dataTableProduct');
+    Route::resource('products', ProductController::class);
+    Route::get('/purchase_orders/searchDataProduct',[ProductController::class, 'searchDataProduct'])->name('purchase_orders.searchDataProduct');
+    Route::resource('/purchase_orders', PurchaseOrderController::class);
+    Route::post('/purchase_orders/dataTablePurchaseOrders',[PurchaseOrderController::class, 'dataTablePurchaseOrders'])->name('purchase_orders.dataTablePurchaseOrders');
 });
 
 Route::get('/dashboard_v1/dt_reminder_next_follow_up_date', [DashboardController::class, 'dtReminderNextFollowUpDate']);
 Route::post('/dashboard_v1/json_handling_invoice',[DashboardController::class,'jsonHandlingInvoice']);
+

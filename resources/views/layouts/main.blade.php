@@ -230,33 +230,10 @@ function bin2hex(str) {
   ).join('');
 }
 
-let notifVisible = false;
-function fetchNotification(){
-  fetch('/log/fetch_follow_up_date')
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('count_notif_follow_up').textContent = data.length;
-      const list = document.getElementById('notif_list_follow_up_date');
-      if(data.length > 0){
-        list.innerHTML = "<span class=\"dropdown-item dropdown-header\">"+ data.length +" Notifications</span>";
-        data.forEach(n => {
-          let el = "<div class=\"dropdown-divider\"></div>"+
-            "<a href=\"/aging_ar/detail_aging_ar/"+ bin2hex(n.invoice_number) +"\" class=\"dropdown-item\">"+
-              "<i class=\"fas fa-solid fa-hourglass-half\"></i> "+ n.invoice_number +" "+
-              "<span class=\"float-end text-secondary fs-7\">"+ n.next_follow_up_date +"</span>"+
-            "</a>";
-          list.innerHTML += el;
-        });
-      }
-    })
-}
-
-
-setInterval(fetchNotification, 5000); // polling setiap 5 detik
-
 function goBack(){
   window.history.back();
 }
 </script>
+@yield('script')
 </body>
 </html>

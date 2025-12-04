@@ -6,9 +6,13 @@
       width: 100%;
       height: 400px;
   }
+  .atomy-blue {
+    background-color: rgba(0, 181, 239, 1); /* Atomy Blue penuh */
+  
+}
 </style>
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand bg-gradient-primary navbar-dark">
+<nav class="main-header navbar navbar-expand atomy-blue navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -19,8 +23,8 @@
       <li class="nav-item">
         <!-- Brand Logo -->
         <a href="#" class="brand-link nav-link">
-          <img src="/images/LOGO-PT-SOS.png" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
-          <span class="brand-text font-weight-light">PT SOS Indonesia</span>
+          <img src="/assets/images/logo-atomy.svg" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
+          <span class="brand-text font-weight-bold">Atomy Indonesia</span>
         </a>
       </li>
     </ul>
